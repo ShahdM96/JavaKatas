@@ -9,7 +9,10 @@ public class WordCounter {
      * @return the number of words in the sentence
      */
     public static int countWords(String sentence) {
-        return 0;
+        if(sentence.isEmpty() || sentence == null) return 0;
+        sentence = sentence.trim();
+        String[] arr = sentence.split(" ");
+        return arr.length;
     }
 
     public static void main(String[] args) {
