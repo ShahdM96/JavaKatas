@@ -18,6 +18,5 @@ public class StringDigitSumTest {
         assertEquals(0, output3);
 
 
-
     }
 }
