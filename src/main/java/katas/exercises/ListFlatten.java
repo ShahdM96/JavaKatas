@@ -12,8 +12,22 @@ public class ListFlatten {
      * @return a flat list containing all integers from the nested structure
      */
     public static List<Integer> flattenList(List<Object> nestedList) {
+        List<Integer> outputList = new ArrayList<>();
+        int i = 0;
+        while(nestedList.size() > i){
+            if(nestedList.get(i) instanceof Integer) outputList.add((Integer) nestedList.get(i));
+            else if(nestedList.get(i) instanceof List<?>){
+                outputList.addAll(flattenList((List<Object>) nestedList.get(i)));
+            }
+            else{
+                throw new IllegalArgumentException("invalid input type");
+            }
+            i++;
+        }
+
+
         // hint: instanceof
-        return new ArrayList<>();
+        return outputList;
     }
 
     public static void main(String[] args) {
@@ -22,6 +36,8 @@ public class ListFlatten {
         nestedList.add(List.of(2, 3));
         nestedList.add(List.of(4, List.of(5, 6)));
         nestedList.add(7);
+
+
 
         List<Integer> flatList = flattenList(nestedList);
 
