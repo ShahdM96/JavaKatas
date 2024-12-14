@@ -11,6 +11,18 @@ public class UniqueString {
      * @return true if all characters are unique, false otherwise
      */
     public static boolean isUnique(String str) {
+        if (str == null || str.isEmpty()) return true;
+
+        boolean[] charSet = new boolean[128];
+        str = str.toLowerCase();
+
+        for (int i = 0; i < str.length(); i++) {
+            int index = str.charAt(i);
+            if (charSet[index]) {
+                return false;
+            }
+            charSet[index] = true;
+        }
         return true;
     }
 
