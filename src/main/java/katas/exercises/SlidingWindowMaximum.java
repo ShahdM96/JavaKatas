@@ -1,5 +1,6 @@
 package katas.exercises;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SlidingWindowMaximum {
@@ -17,7 +18,18 @@ public class SlidingWindowMaximum {
      * @return a list of the maximum values in each window
      */
     public static List<Integer> maxSlidingWindow(int[] nums, int k) {
-        return null;
+        List<Integer> output = new ArrayList<>();
+        if(nums.length == 0) return output ;
+        int max = nums[0];
+        for(int i=0; i<k; i++){
+            if(nums[i] > max) max = nums[i];
+        }
+        output.add(max);
+        for(int i=k; i<nums.length; i++){
+            if(nums[i] > max) max = nums[i];
+            output.add(max);
+        }
+        return output;
     }
 
     public static void main(String[] args) {
