@@ -1,6 +1,9 @@
 package katas.exercises;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RequirementsCoverage {
 
@@ -23,9 +26,35 @@ public class RequirementsCoverage {
      * @return a list of indices of the minimal subset of test cases that covers all requirements
      */
     public static List<Integer> selectMinimalTestCases(List<List<Integer>> testCases) {
-        return null;
-    }
+        Set<Integer> allRequirements = new HashSet<>();
+        for (List<Integer> testCase : testCases) {
+            allRequirements.addAll(testCase);
+        }
 
+        List<Integer> result = new ArrayList<>();
+        findMinimalSet(testCases, new ArrayList<>(), allRequirements, result, 0);
+        return result;
+
+    }
+    private static void findMinimalSet(List<List<Integer>> testCases, List<Integer> currentSet, Set<Integer> uncovered,
+                                       List<Integer> bestSet, int startIndex) {
+        if (uncovered.isEmpty()) {
+            if (bestSet.isEmpty() || currentSet.size() < bestSet.size()) {
+                bestSet.clear();
+                bestSet.addAll(currentSet);
+            }
+            return;
+        }
+
+        for (int i = startIndex; i < testCases.size(); i++) {
+            List<Integer> testCase = testCases.get(i);
+            Set<Integer> newUncovered = new HashSet<>(uncovered);
+            newUncovered.removeAll(testCase);
+            currentSet.add(i);
+            findMinimalSet(testCases, currentSet, newUncovered, bestSet, i + 1);
+            currentSet.remove(currentSet.size() - 1);
+        }
+    }
     public static void main(String[] args) {
         List<List<Integer>> testCases = List.of(
                 List.of(1, 2, 3),

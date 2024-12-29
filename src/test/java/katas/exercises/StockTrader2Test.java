@@ -8,8 +8,8 @@ public class StockTrader2Test {
     @Test
     public void testMaxProfit(){
         int[] stockPrices = {7, 1, 5, 3, 6, 4};
-        int expected =StockTrader2.maxProfit(stockPrices);
-        assertEquals(7,expected);
+        int result =StockTrader2.maxProfit(stockPrices);
+        assertEquals(7,result);
 
 
     }
