@@ -11,7 +11,7 @@ public class MaxStorageCapacityTest {
         int[] containers = {2, 1, 5, 6, 2, 3};
 
         int result = maxStorageArea(containers);
-        assertEquals(10, result,"incorrrect output");
+        assertEquals(10, result,"incorrect output");
 
 
     }
