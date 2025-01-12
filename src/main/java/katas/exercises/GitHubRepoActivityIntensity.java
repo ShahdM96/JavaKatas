@@ -6,7 +6,7 @@ import java.time.Instant;
 
 import java.util.List;
 
-
+/*
 public class GitHubRepoActivityIntensity {
     /**
      * Analyze the activity level of a specific GitHub repository.
@@ -67,3 +67,4 @@ public class GitHubRepoActivityIntensity {
 }
 
 
+*/
