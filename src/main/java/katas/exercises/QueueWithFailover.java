@@ -1,5 +1,6 @@
 package katas.exercises;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 public class QueueWithFailover {
@@ -36,7 +37,10 @@ public class QueueWithFailover {
          *
          * @return boolean: True if the job queue is empty, False otherwise.
          */
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if(this.jobs.size() == 0)
+            return true;
+        return false;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     public void sendJob(String job) {
@@ -45,7 +49,8 @@ public class QueueWithFailover {
          *
          * @param job The job to be added to the queue.
          */
-        throw new UnsupportedOperationException("Not implemented yet.");
+        this.jobs.add(job);
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     public String getJob() throws EmptyQueueException {
@@ -55,7 +60,14 @@ public class QueueWithFailover {
          * @return String: The job at the front of the queue.
          * @throws EmptyQueueException: If the job queue is empty.
          */
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if(isEmpty()){
+            throw new EmptyQueueException("Queue is empty.");
+        }
+        String output = this.jobs.poll();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        this.hiddenJobs.put(output, timestamp.getTime());
+        return output;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     public void jobDone(String job) {
@@ -66,7 +78,11 @@ public class QueueWithFailover {
          * @param job The job to be deleted permanently from the queue.
          * @throws IllegalArgumentException: If the job is not found in the hidden jobs.
          */
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if(this.hiddenJobs.containsKey(job)){
+            this.hiddenJobs.remove(job);
+        }
+        else throw new IllegalArgumentException("Job not found in the hidden jobs.");
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     public int size() {
@@ -75,7 +91,8 @@ public class QueueWithFailover {
          *
          * @return int: The number of jobs in the queue.
          */
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return this.jobs.size();
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     public int inFlightSize() {
@@ -84,14 +101,23 @@ public class QueueWithFailover {
          *
          * @return int: The number of hidden jobs in the queue.
          */
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return this.hiddenJobs.size();
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     public void returnExpiredJobsToQueue() {
         /**
          * Return hidden jobs that were retrieved more than `jobTimeout` seconds ago back to the job queue.
          */
-        throw new UnsupportedOperationException("Not implemented yet.");
+        //throw new UnsupportedOperationException("Not implemented yet.");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        //Long time = timestamp.getTime();
+        for (Map.Entry<String,Long> entry : this.hiddenJobs.entrySet()) {
+            if (entry.getValue() + this.jobTimeout < timestamp.getTime()){
+                this.jobs.add(entry.getKey());
+                this.hiddenJobs.remove(entry.getKey());
+            }
+        }
     }
 
     public static void main(String[] args) {

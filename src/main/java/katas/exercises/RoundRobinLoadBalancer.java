@@ -1,6 +1,7 @@
 package katas.exercises;
 
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class RoundRobinLoadBalancer {
@@ -23,7 +24,8 @@ public class RoundRobinLoadBalancer {
      * Constructor to initialize the load balancer.
      */
     public RoundRobinLoadBalancer() {
-
+        this.servers = new LinkedList<>();
+        this.currentIndex = -1;
     }
 
     /**
@@ -32,7 +34,10 @@ public class RoundRobinLoadBalancer {
      * @param server the IP object representing the server to add
      */
     public void addServer(IP server) {
-
+        this.servers.add(server);
+        if(this.currentIndex == -1) {
+            this.currentIndex = this.servers.size() - 1;
+        }
     }
 
     /**
@@ -41,7 +46,17 @@ public class RoundRobinLoadBalancer {
      * @param server the IP object representing the server to remove
      */
     public void removeServer(IP server) {
-
+        int i = this.servers.indexOf(server);
+        if(i==this.currentIndex) {
+            if (this.servers.size() == 1) {
+                this.currentIndex = -1;
+            } else if (i == this.servers.size() - 1) {
+                this.currentIndex = 0;
+            }
+        }else if(i<this.currentIndex) {
+            this.currentIndex-=1;
+        }
+        this.servers.remove(server);
     }
 
     /**
@@ -50,6 +65,16 @@ public class RoundRobinLoadBalancer {
      * @return the IP object of the server handling the request
      */
     public IP routeRequest() {
+        if(this.currentIndex == -1) return null;
+        int i = this.currentIndex;
+        if(this.servers.size() == 1){
+            this.currentIndex = -1;
+        }else if(this.currentIndex == this.servers.size()-1){
+            this.currentIndex = 0;
+        }else{
+            this.currentIndex +=1;
+        }
+        return this.servers.get(i);
 
     }
 
@@ -65,8 +90,9 @@ public class RoundRobinLoadBalancer {
         System.out.println("Routing to: " + loadBalancer.routeRequest());
         System.out.println("Routing to: " + loadBalancer.routeRequest());
 
-        loadBalancer.removeServer(new IP("192.168.0.2"));
+        loadBalancer.removeServer(new IP("192.168.0.1"));
 
+        System.out.println("Routing to: " + loadBalancer.routeRequest());
         System.out.println("Routing to: " + loadBalancer.routeRequest());
         System.out.println("Routing to: " + loadBalancer.routeRequest());
     }
@@ -74,7 +100,7 @@ public class RoundRobinLoadBalancer {
     /**
      * Represents an IP address.
      */
-    class IP {
+    static class IP {
         private final String address;
 
         /**
@@ -86,6 +112,7 @@ public class RoundRobinLoadBalancer {
             if (!isValidIP(address)) {
                 throw new IllegalArgumentException("Invalid IP address: " + address);
             }
+            this.address = address;
         }
 
         /**
@@ -95,7 +122,8 @@ public class RoundRobinLoadBalancer {
          * @return true if the address is valid, false otherwise
          */
         private static boolean isValidIP(String address) {
-
+            String[] arr = address.split("\\.");
+            return arr.length == 4;
         }
 
         @Override
@@ -114,6 +142,7 @@ public class RoundRobinLoadBalancer {
         @Override
         public int hashCode() {
 
+            return address.hashCode();// using String hashCode
         }
     }
 
