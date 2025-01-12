@@ -1,16 +1,16 @@
-//package katas.exercises;
-//
-//import org.junit.jupiter.api.Test;
-//import org.mockito.Mockito;
-//import java.net.HttpURLConnection;
-//import java.time.Instant;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.*;
-//
-//public class GitHubRepoActivityIntensityTest {
-//
+package katas.exercises;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import java.net.HttpURLConnection;
+import java.time.Instant;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class GitHubRepoActivityIntensityTest {
+
 //    @Test
 //    void testCalculateAverageTimeBetweenCommits() throws Exception {
 //        List<Instant> mockTimestamps = List.of(
@@ -32,4 +32,4 @@
 //
 //        // continue....
 //    }
-//}
+}
