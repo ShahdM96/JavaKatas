@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class OrderedMapTest {
     @Test
-    public void testsize() {
+    public void testSize() {
         OrderedMap<String, Integer> orderedMap = new OrderedMap<>();
         orderedMap.put("One", 1);
         orderedMap.put("Two", 2);
