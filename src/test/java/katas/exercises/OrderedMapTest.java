@@ -55,4 +55,15 @@ public class OrderedMapTest {
         test3.add("Two");
         assertEquals(test3, orderedMap.keys(), "Incorrect order");
     }
+
+    @Test
+    void tesDuplicateKeys() {
+        OrderedMap<String, Integer> orderedMap = new OrderedMap<>();
+
+        orderedMap.put("Two", 2);
+        orderedMap.put("Two", 22);
+
+        assertEquals(22, orderedMap.get("Two"), "Incorrect value - expected 22");
+        assertEquals(1, orderedMap.size(), "Incorrect size - expected 1");
+    }
     }
