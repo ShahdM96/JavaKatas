@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrderedMapTest {
     @Test
@@ -65,5 +65,24 @@ public class OrderedMapTest {
 
         assertEquals(22, orderedMap.get("Two"), "Incorrect value - expected 22");
         assertEquals(1, orderedMap.size(), "Incorrect size - expected 1");
+    }
+
+    @Test
+    void testClear() {
+        OrderedMap<String, Integer> orderedMap = new OrderedMap<>();
+
+        orderedMap.put("One", 1);
+        orderedMap.put("Two", 2);
+        orderedMap.clear();
+
+        assertEquals(0, orderedMap.size(), "Incorrect size");
+        assertTrue(orderedMap.keys().isEmpty(), "Map should be empty");
+    }
+
+    @Test
+    void testNull() {
+        OrderedMap<String, Integer> orderedMap = new OrderedMap<>();
+
+        assertNull(orderedMap.get("null"), "Expected null");
     }
     }
