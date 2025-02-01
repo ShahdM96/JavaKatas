@@ -1,5 +1,8 @@
 package katas.exercises;
 
+import java.util.Collections;
+import java.util.PriorityQueue;
+
 /**
  * find the median of a stream of integers.
  *
@@ -12,12 +15,15 @@ package katas.exercises;
  * Hint: Consider using two heaps (min-heap and max-heap) to efficiently maintain the order of elements.
  */
 public class MedianFinder {
+    private PriorityQueue<Integer> maxHeap;
+    private PriorityQueue<Integer> minHeap;
 
     /**
      * Initializes the MedianFinder object.
      */
     public MedianFinder() {
-
+        maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        minHeap = new PriorityQueue<>();
     }
 
     /**
@@ -26,7 +32,15 @@ public class MedianFinder {
      * @param num the number to be added
      */
     public void addNum(int num) {
+        maxHeap.offer(num);
 
+        if (maxHeap.size() > minHeap.size() + 1) {
+            minHeap.offer(maxHeap.poll());
+        }
+        if (!minHeap.isEmpty() && maxHeap.peek() > minHeap.peek()) {
+            minHeap.offer(maxHeap.poll());
+            maxHeap.offer(minHeap.poll());
+        }
     }
 
     /**
@@ -35,8 +49,11 @@ public class MedianFinder {
      * @return the median as a double
      */
     public double findMedian() {
-
-        return 0.0;
+        if (maxHeap.size() > minHeap.size()) {
+            return maxHeap.peek();
+        } else {
+            return (maxHeap.peek() + minHeap.peek()) / 2.0;
+        }
     }
 
     public static void main(String[] args) {

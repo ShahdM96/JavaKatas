@@ -14,8 +14,6 @@ import java.util.*;
  */
 class GraphCloner {
 
-
-
     /**
      * Clones a directed graph.
      *
@@ -23,8 +21,26 @@ class GraphCloner {
      * @return the starting node of the cloned graph
      */
     public static Node cloneGraph(Node node) {
-        return null;
+        if (node == null) return null;
+        Map<Node, Node> cloneMap = new HashMap<>();
+        return cloneGraphDFS(node, cloneMap);
     }
+
+    private static Node cloneGraphDFS(Node node, Map<Node, Node> cloneMap) {
+        if (cloneMap.containsKey(node)) {
+            return cloneMap.get(node);
+        }
+
+        Node clonedNode = new Node(node.val);
+        cloneMap.put(node, clonedNode);
+
+        for (Node neighbor : node.neighbors) {
+            clonedNode.neighbors.add(cloneGraphDFS(neighbor, cloneMap));
+        }
+
+        return clonedNode;
+    }
+
 
     public static void main(String[] args) {
         Node node1 = new Node(1);

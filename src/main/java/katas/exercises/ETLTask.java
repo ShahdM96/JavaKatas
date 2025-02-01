@@ -3,6 +3,7 @@ package katas.exercises;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeParseException;
 
 /**
  * Read about how to perform simple operations in SQLite3 in Java: https://github.com/xerial/sqlite-jdbc
@@ -78,10 +79,53 @@ public class ETLTask {
             // Extract data from source database
             ResultSet rs = sourceStmt.executeQuery("SELECT * FROM users");
 
+            String insertSQL = "INSERT INTO transformed_users (user_id, full_name, email, age_group, years_registered) VALUES (?, ?, ?, ?, ?)";
 
-            // TODO ....
+            try (PreparedStatement insertStmt = targetConn.prepareStatement(insertSQL)) {
+                while (rs.next()) {
+                    int userId = rs.getInt("id");
+                    String fullName = rs.getString("name");
+                    String email = rs.getString("email");
+                    int age = rs.getInt("age");
+                    String registrationDate = rs.getString("registration_date");
+
+
+                    String ageGroup;
+                    if (age < 30) {
+                        ageGroup = "Under 30";
+                    } else if (age <= 60) {
+                        ageGroup = "30-60";
+                    } else {
+                        ageGroup = "60+";
+                    }
+
+
+                    int yearsRegistered = 0;
+                    try {
+                        LocalDate regDate = LocalDate.parse(registrationDate);
+                        yearsRegistered = Period.between(regDate, LocalDate.now()).getYears();
+                    } catch (DateTimeParseException e) {
+                        System.err.println("Error parsing date for user " + fullName + ": " + registrationDate);
+                    }
+
+
+                    insertStmt.setInt(1, userId);
+                    insertStmt.setString(2, fullName);
+                    insertStmt.setString(3, email);
+                    insertStmt.setString(4, ageGroup);
+                    insertStmt.setInt(5, yearsRegistered);
+
+                    insertStmt.executeUpdate();
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Database error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
+
 
     public static void main(String[] args) throws SQLException {
         String sourceDb = "source.db";

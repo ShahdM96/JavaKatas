@@ -1,6 +1,7 @@
 package katas.exercises;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -30,12 +31,14 @@ public class Lags {
         int startTime;
         int duration;
         int payment;
+        int endTime;
 
         public Request(String id, int startTime, int duration, int payment) {
             this.id = id;
             this.startTime = startTime;
             this.duration = duration;
             this.payment = payment;
+            this.endTime = startTime + duration;
         }
     }
 
@@ -46,9 +49,45 @@ public class Lags {
      * @return the maximum profit
      */
     public static int maximizeProfit(List<Request> requests) {
-        return 0;
-    }
+        if (requests == null || requests.isEmpty()) {
+            return 0;
+        }
+        requests.sort(Comparator.comparingInt(req -> req.endTime));
 
+        int n = requests.size();
+        int[] dp = new int[n]; // DP table
+        dp[0] = requests.get(0).payment; // Base case
+
+        for (int i = 1; i < n; i++) {
+            int includeProfit = requests.get(i).payment;
+            int latestNonConflict = findLatestNonConflict(requests, i);
+
+            if (latestNonConflict != -1) {
+                includeProfit += dp[latestNonConflict];
+            }
+
+            dp[i] = Math.max(includeProfit, dp[i - 1]);
+        }
+
+        return dp[n - 1];
+        //return 0;
+    }
+    private static int findLatestNonConflict(List<Request> requests, int index) {
+        int low = 0, high = index - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (requests.get(mid).endTime <= requests.get(index).startTime) {
+                if (requests.get(mid + 1).endTime <= requests.get(index).startTime) {
+                    low = mid + 1;
+                } else {
+                    return mid;
+                }
+            } else {
+                high = mid - 1;
+            }
+        }
+        return -1;
+    }
     public static void main(String[] args) {
         List<Request> requests = new ArrayList<>();
         requests.add(new Request("REQ01", 0, 5, 50));
